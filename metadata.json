@@ -1,0 +1,6 @@
+{
+  "name": "Maatrm AI Labs",
+  "description": "Portfolio website for Maatrm AI Labs, a freelance IT solutions studio building custom software, automation, dashboards, and AI solutions for small to medium-scale industries.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

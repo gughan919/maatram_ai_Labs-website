@@ -11,6 +11,10 @@ type EnquiryPayload = {
 const MAX_FIELD_LENGTH = 500;
 const MAX_MESSAGE_LENGTH = 5000;
 
+function cleanEnv(value: string | undefined) {
+  return value?.trim().replace(/^["']|["']$/g, '');
+}
+
 function jsonResponse(body: unknown, status = 200) {
   return Response.json(body, {
     status,
@@ -38,9 +42,9 @@ function isValidEmail(value: string) {
 }
 
 export const POST = async (request: Request) => {
-  const gmailUser = process.env.GMAIL_USER;
-  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD?.replace(/\s/g, '');
-  const toEmail = process.env.ENQUIRY_TO_EMAIL;
+  const gmailUser = cleanEnv(process.env.GMAIL_USER);
+  const gmailAppPassword = cleanEnv(process.env.GMAIL_APP_PASSWORD)?.replace(/\s/g, '');
+  const toEmail = cleanEnv(process.env.ENQUIRY_TO_EMAIL);
 
   if (!gmailUser || !gmailAppPassword || !toEmail) {
     return jsonResponse({ error: 'Email service is not configured.' }, 500);
@@ -110,7 +114,11 @@ export const POST = async (request: Request) => {
       html,
     });
   } catch (error) {
-    console.error('Failed to send enquiry email:', error);
+    console.error('Failed to send enquiry email:', {
+      gmailUser,
+      appPasswordLength: gmailAppPassword.length,
+      error,
+    });
     return jsonResponse({ error: 'Unable to send enquiry right now.' }, 502);
   }
 

@@ -2,7 +2,7 @@ export default function EnhancedFooter() {
   const sections = [
     { title: 'Company', links: ['About', 'Founders', 'Contact'] },
     { title: 'Services', links: ['Custom Software', 'AI Solutions', 'Automation'] },
-    { title: 'Resources', links: ['Projects', 'Industries', 'Process'] },
+    { title: 'Resources', links: ['Products', 'Industries', 'Process'] },
   ];
 
   return (
@@ -22,7 +22,7 @@ export default function EnhancedFooter() {
               <ul className="space-y-2">
                 {s.links.map((l) => (
                   <li key={l}>
-                    <a href="#contact" className="text-slate-400 hover:text-gold">{l}</a>
+                    <a href={l === 'Products' ? '/products' : '/#contact'} className="text-slate-400 hover:text-gold">{l}</a>
                   </li>
                 ))}
               </ul>

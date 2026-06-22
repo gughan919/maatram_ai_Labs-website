@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 type EnquiryPayload = {
   name?: unknown;
   email?: unknown;
+  contact?: unknown;
   company?: unknown;
   message?: unknown;
   website?: unknown;
@@ -41,15 +42,11 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function isValidPhone(value: string) {
+  return /^[+\d][\d\s().-]{6,}$/.test(value);
+}
+
 export const POST = async (request: Request) => {
-  const gmailUser = cleanEnv(process.env.GMAIL_USER);
-  const gmailAppPassword = cleanEnv(process.env.GMAIL_APP_PASSWORD)?.replace(/\s/g, '');
-  const toEmail = cleanEnv(process.env.ENQUIRY_TO_EMAIL);
-
-  if (!gmailUser || !gmailAppPassword || !toEmail) {
-    return jsonResponse({ error: 'Email service is not configured.' }, 500);
-  }
-
   let payload: EnquiryPayload;
 
   try {
@@ -63,16 +60,25 @@ export const POST = async (request: Request) => {
   }
 
   const name = asText(payload.name);
-  const email = asText(payload.email);
+  const contact = asText(payload.contact || payload.email);
   const company = asText(payload.company);
   const message = asText(payload.message, MAX_MESSAGE_LENGTH);
+  const welcomeMessage = `Hi ${name || 'there'}, thank you for contacting Maatrm AI Labs. We have received your enquiry and our team will get back to you soon. We're excited to explore how AI can help your business.`;
 
-  if (!name || !email || !message) {
-    return jsonResponse({ error: 'Name, email, and message are required.' }, 400);
+  if (!name || !contact || !company) {
+    return jsonResponse({ error: 'Name, phone number / email, and business name are required.' }, 400);
   }
 
-  if (!isValidEmail(email)) {
-    return jsonResponse({ error: 'Enter a valid email address.' }, 400);
+  if (!isValidEmail(contact) && !isValidPhone(contact)) {
+    return jsonResponse({ error: 'Enter a valid email address or phone number.' }, 400);
+  }
+
+  const gmailUser = cleanEnv(process.env.GMAIL_USER);
+  const gmailAppPassword = cleanEnv(process.env.GMAIL_APP_PASSWORD)?.replace(/\s/g, '');
+  const toEmail = cleanEnv(process.env.ENQUIRY_TO_EMAIL);
+
+  if (!gmailUser || !gmailAppPassword || !toEmail) {
+    return jsonResponse({ error: 'Email service is not configured.', welcomeMessage }, 500);
   }
 
   const transporter = nodemailer.createTransport({
@@ -83,24 +89,24 @@ export const POST = async (request: Request) => {
     },
   });
 
-  const subject = `New project enquiry from ${name}`;
+  const subject = `New product enquiry from ${name}`;
   const text = [
     `Name: ${name}`,
-    `Email: ${email}`,
-    `Company: ${company || 'Not provided'}`,
+    `Phone / Email: ${contact}`,
+    `Business: ${company}`,
     '',
-    'Message:',
-    message,
+    'Description:',
+    message || 'Not provided',
   ].join('\n');
 
   const html = `
     <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #111827;">
-      <h2>New project enquiry</h2>
+      <h2>New product enquiry</h2>
       <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-      <p><strong>Company:</strong> ${escapeHtml(company || 'Not provided')}</p>
-      <p><strong>Message:</strong></p>
-      <p style="white-space: pre-wrap;">${escapeHtml(message)}</p>
+      <p><strong>Phone / Email:</strong> ${escapeHtml(contact)}</p>
+      <p><strong>Business:</strong> ${escapeHtml(company)}</p>
+      <p><strong>Description:</strong></p>
+      <p style="white-space: pre-wrap;">${escapeHtml(message || 'Not provided')}</p>
     </div>
   `;
 
@@ -108,11 +114,25 @@ export const POST = async (request: Request) => {
     await transporter.sendMail({
       from: `"Maatrm AI Labs" <${gmailUser}>`,
       to: toEmail.split(',').map((item) => item.trim()).filter(Boolean),
-      replyTo: email,
+      replyTo: isValidEmail(contact) ? contact : undefined,
       subject,
       text,
       html,
     });
+
+    if (isValidEmail(contact)) {
+      await transporter.sendMail({
+        from: `"Maatrm AI Labs" <${gmailUser}>`,
+        to: contact,
+        subject: 'Thank you for contacting Maatrm AI Labs',
+        text: welcomeMessage,
+        html: `
+          <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">
+            <p>${escapeHtml(welcomeMessage)}</p>
+          </div>
+        `,
+      });
+    }
   } catch (error) {
     console.error('Failed to send enquiry email:', {
       gmailUser,
@@ -122,7 +142,7 @@ export const POST = async (request: Request) => {
     return jsonResponse({ error: 'Unable to send enquiry right now.' }, 502);
   }
 
-  return jsonResponse({ ok: true });
+  return jsonResponse({ ok: true, welcomeMessage });
 };
 
 export const GET = () => jsonResponse({ error: 'Method not allowed.' }, 405);

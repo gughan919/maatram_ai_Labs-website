@@ -7,7 +7,7 @@ const services = [
   { title: 'Custom Software Development', icon: Code2, desc: 'Web apps, portals, internal tools, and business systems designed around your exact workflow, approvals, roles, reports, and day-to-day operations.' },
   { title: 'AI Solutions', icon: BrainCircuit, desc: 'AI chatbots, document assistants, recommendation systems, smart search, summaries, and workflow intelligence that help teams work faster with better context.' },
   { title: 'Business Automation', icon: Cog, desc: 'Automation for repetitive tasks such as data entry, billing flows, notifications, approvals, follow-ups, and status updates across departments.' },
-  { title: 'Dashboards and Analytics', icon: LayoutDashboard, desc: 'Live dashboards, KPI tracking, project visibility, financial summaries, and operational reports that turn scattered data into decisions.' },
+  { title: 'Dashboards and Analytics', icon: LayoutDashboard, desc: 'Live dashboards, KPI tracking, operations visibility, financial summaries, and reports that turn scattered data into decisions.' },
   { title: 'Database and Backend Systems', icon: Database, desc: 'Secure data models, APIs, admin panels, authentication, role-based access, and scalable backend logic for reliable business applications.' },
   { title: 'Cloud Deployment', icon: Cloud, desc: 'Deployment, hosting setup, performance tuning, backups, environment configuration, and practical support after launch.' },
   { title: 'AI Agents and Assistants', icon: Bot, desc: 'Task-focused assistants that can answer business questions, guide customers, collect requirements, and support teams with structured outputs.' },

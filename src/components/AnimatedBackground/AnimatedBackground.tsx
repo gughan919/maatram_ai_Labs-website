@@ -24,10 +24,9 @@ export default function AnimatedBackground() {
     let height = (canvas.height = window.innerHeight);
 
     const isMobile = width < 768;
-    const particleCount = isMobile ? 50 : 120;
+    const particleCount = isMobile ? 34 : 82;
     
-    // Particle float speed multiplier
-    const speedMultiplier = isMobile ? 1.3 : 2.2;
+    const speedMultiplier = isMobile ? 0.18 : 0.28;
 
     interface Particle {
       x: number;
@@ -65,8 +64,8 @@ export default function AnimatedBackground() {
         radius: Math.random() * 1.8 + 0.8, // 0.8px to 2.6px radius (1.6px to 5.2px diameter) - smaller size!
         color: colors[colorIndex],
         glowColor: glowColors[colorIndex],
-        baseAlpha: Math.random() * 0.6 + 0.3,
-        pulseSpeed: Math.random() * 0.03 + 0.01,
+        baseAlpha: Math.random() * 0.32 + 0.18,
+        pulseSpeed: Math.random() * 0.006 + 0.003,
         pulseOffset: Math.random() * Math.PI * 2,
       });
     }
@@ -93,7 +92,7 @@ export default function AnimatedBackground() {
       }
 
       ctx.clearRect(0, 0, width, height);
-      tick += 1;
+      tick += 0.35;
 
       // Draw and update sparkles
       for (let i = 0; i < particles.length; i++) {

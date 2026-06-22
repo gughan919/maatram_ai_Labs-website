@@ -1,5 +1,8 @@
 import { FormEvent, useState } from 'react';
 
+const isEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+const isPhone = (value: string) => /^[+\d][\d\s().-]{6,}$/.test(value);
+
 export default function Contact() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [statusMessage, setStatusMessage] = useState('');
@@ -9,6 +12,22 @@ export default function Contact() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    const name = String(formData.get('name') || '').trim();
+    const contact = String(formData.get('contact') || '').trim();
+    const company = String(formData.get('company') || '').trim();
+    const message = String(formData.get('message') || '').trim();
+
+    if (!name || !contact || !company) {
+      setStatus('error');
+      setStatusMessage('Name, phone number / email, and business name are required.');
+      return;
+    }
+
+    if (!isEmail(contact) && !isPhone(contact)) {
+      setStatus('error');
+      setStatusMessage('Enter a valid email address or phone number.');
+      return;
+    }
 
     setStatus('sending');
     setStatusMessage('');
@@ -20,10 +39,10 @@ export default function Contact() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.get('name'),
-          email: formData.get('email'),
-          company: formData.get('company'),
-          message: formData.get('message'),
+          name,
+          contact,
+          company,
+          message,
           website: formData.get('website'),
         }),
       });
@@ -36,7 +55,7 @@ export default function Contact() {
 
       form.reset();
       setStatus('sent');
-      setStatusMessage('Enquiry sent. We will contact you soon.');
+      setStatusMessage(result.welcomeMessage || 'Enquiry received. We will contact you soon.');
     } catch (error) {
       setStatus('error');
       setStatusMessage(error instanceof Error ? error.message : 'Unable to send enquiry right now.');
@@ -69,25 +88,37 @@ export default function Contact() {
               </div>
             </div>
             <p className="text-slate-500 mt-6">
-              We are available for freelance projects, custom software development, AI integrations, and long-term technology support.
+              We are available for product customization, custom software development, AI integrations, and long-term technology support.
             </p>
           </div>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <div className="grid md:grid-cols-2 gap-6">
-              <input name="name" type="text" placeholder="Name" required className="w-full bg-bg-card text-white rounded-lg p-4 border border-border focus:border-gold outline-none" />
-              <input name="email" type="email" placeholder="Email" required className="w-full bg-bg-card text-white rounded-lg p-4 border border-border focus:border-gold outline-none" />
+              <label className="block">
+                <span className="block text-sm font-semibold text-slate-300 mb-2">Name <span className="text-gold">*</span></span>
+                <input name="name" type="text" placeholder="Your name" required className="w-full bg-bg-card text-white rounded-lg p-4 border border-border focus:border-gold outline-none" />
+              </label>
+              <label className="block">
+                <span className="block text-sm font-semibold text-slate-300 mb-2">Phone Number / Email <span className="text-gold">*</span></span>
+                <input name="contact" type="text" placeholder="Phone number or email" required className="w-full bg-bg-card text-white rounded-lg p-4 border border-border focus:border-gold outline-none" />
+              </label>
             </div>
-            <input name="company" type="text" placeholder="Company / Business name" className="w-full bg-bg-card text-white rounded-lg p-4 border border-border focus:border-gold outline-none" />
-            <textarea name="message" placeholder="Tell us about the software, automation, dashboard, or AI solution you need" rows={6} required className="w-full bg-bg-card text-white rounded-lg p-4 border border-border focus:border-gold outline-none"></textarea>
+            <label className="block">
+              <span className="block text-sm font-semibold text-slate-300 mb-2">Business Name <span className="text-gold">*</span></span>
+              <input name="company" type="text" placeholder="Company / business name" required className="w-full bg-bg-card text-white rounded-lg p-4 border border-border focus:border-gold outline-none" />
+            </label>
+            <label className="block">
+              <span className="block text-sm font-semibold text-slate-300 mb-2">Description <span className="text-slate-500">(Optional)</span></span>
+              <textarea name="message" placeholder="Tell us about the software, automation, dashboard, or AI solution you need" rows={6} className="w-full bg-bg-card text-white rounded-lg p-4 border border-border focus:border-gold outline-none"></textarea>
+            </label>
             {statusMessage && (
               <p className={status === 'sent' ? 'text-gold' : 'text-red-300'} role="status">
                 {statusMessage}
               </p>
             )}
             <button type="submit" disabled={status === 'sending'} className="w-full bg-gradient-to-r from-gold-soft to-gold text-black p-4 rounded-lg font-bold hover:scale-[1.01] transition-all disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100">
-              {status === 'sending' ? 'Sending...' : 'Send Project Enquiry'}
+              {status === 'sending' ? 'Sending...' : 'Send Product Enquiry'}
             </button>
           </form>
         </div>

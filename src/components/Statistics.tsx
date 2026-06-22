@@ -2,10 +2,25 @@ import { motion, animate, useInView } from 'motion/react';
 import { useEffect, useRef } from 'react';
 
 const stats = [
-  { value: '2', label: 'Projects Delivered' },
+  { value: '2', label: 'Products Delivered' },
   { value: '2', label: 'Industries Served' },
   { value: '99.9%', label: 'System Availability' },
   { value: '95%', label: 'Client Satisfaction' },
+];
+
+const reviews = [
+  {
+    logo: 'CC',
+    customer: 'Crestline Constructions',
+    product: 'Civil Project Management System',
+    review: 'The product gave our site and office teams one place to track updates, tasks, and records. It made daily coordination clearer and easier to review.',
+  },
+  {
+    logo: 'RB',
+    customer: 'Retail Billing Co.',
+    product: 'Invoice Billing System',
+    review: 'Billing became faster and cleaner, with customer and product records available whenever we need them. This is sample review content ready to replace with a real testimonial.',
+  },
 ];
 
 function CountUp({ value }: { value: string }) {
@@ -58,6 +73,22 @@ export default function Statistics() {
               </div>
               <div className="text-slate-400 font-heading tracking-wider text-lg">{s.label}</div>
             </motion.div>
+          ))}
+        </div>
+        <div className="grid md:grid-cols-2 gap-6 mt-14">
+          {reviews.map((review) => (
+            <div key={review.customer} className="bg-bg-card border border-border rounded-2xl p-6 sm:p-8 hover:border-gold transition-all">
+              <div className="flex items-start gap-4 mb-5">
+                <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-gold-soft to-gold text-black font-bold flex items-center justify-center shrink-0">
+                  {review.logo}
+                </div>
+                <div>
+                  <h3 className="font-heading text-xl font-semibold text-white">{review.customer}</h3>
+                  <p className="text-gold text-sm mt-1">{review.product}</p>
+                </div>
+              </div>
+              <p className="text-slate-400 leading-relaxed">{review.review}</p>
+            </div>
           ))}
         </div>
       </div>

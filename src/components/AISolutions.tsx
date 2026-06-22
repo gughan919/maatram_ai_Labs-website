@@ -19,7 +19,7 @@ export default function AISolutions() {
           AI that supports people, not replaces process
         </h2>
         <p className="text-slate-400 text-center max-w-3xl mx-auto mb-16">
-          We build AI features that fit inside useful software: answering questions, summarizing information, improving visibility, reducing repeated work, and helping teams act with more confidence.
+          We build AI-powered systems that understand your business, automate repetitive work, and help you make faster, smarter decisions.
         </p>
       </SectionReveal>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

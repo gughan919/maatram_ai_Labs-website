@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
 const links = [
-  { label: 'About', href: '#about' },
-  { label: 'Services', href: '#services' },
-  { label: 'Products', href: '#products' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Industries', href: '#industries' },
+  { label: 'Services', href: '/#services' },
+  { label: 'Solutions', href: '/#solution-areas' },
+  { label: 'Products', href: '/products' },
+  { label: 'Industries', href: '/#industries' },
+  { label: 'About', href: '/#about' },
 ];
 
 export default function NavBar() {
@@ -17,7 +17,7 @@ export default function NavBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
-            <span className="font-heading text-xl font-bold text-white tracking-tighter">Maatrm AI Labs</span>
+            <a href="/" className="font-heading text-xl font-bold text-white tracking-tighter">Maatrm AI Labs</a>
           </div>
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-6">
@@ -26,7 +26,7 @@ export default function NavBar() {
                   {item.label}
                 </a>
               ))}
-              <a href="#contact" className="bg-gradient-to-r from-gold-soft to-gold text-black px-6 py-2 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)] hover:shadow-[0_0_20px_rgba(212,175,55,0.5)]">Contact Us</a>
+              <a href="/#contact" className="bg-gradient-to-r from-gold-soft to-gold text-black px-6 py-2 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)] hover:shadow-[0_0_20px_rgba(212,175,55,0.5)]">Contact Us</a>
             </div>
           </div>
           <div className="md:hidden">
@@ -39,7 +39,7 @@ export default function NavBar() {
       {isOpen && (
         <div className="md:hidden bg-bg-alt border-b border-border">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {[...links, { label: 'Contact', href: '#contact' }].map((item) => (
+            {[...links, { label: 'Contact', href: '/#contact' }].map((item) => (
               <a key={item.label} href={item.href} className="text-slate-300 hover:text-gold block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsOpen(false)}>
                 {item.label}
               </a>

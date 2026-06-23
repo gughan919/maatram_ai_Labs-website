@@ -1,4 +1,5 @@
 import { productCatalog } from '../data/products';
+import BillingSystemCarousel from '../components/BillingSystemCarousel';
 
 export default function ProductsPage() {
   return (
@@ -15,12 +16,16 @@ export default function ProductsPage() {
         <div className="space-y-10">
           {productCatalog.map((product) => (
             <article key={product.name} className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 bg-bg-card border border-border rounded-2xl overflow-hidden hover:border-gold transition-all">
-              <div className="bg-black/30 p-4 sm:p-6 flex items-center">
-                <img
-                  src={product.image}
-                  alt={`${product.name} screenshot placeholder`}
-                  className="w-full rounded-xl border border-border shadow-2xl"
-                />
+              <div className="bg-black/30 p-4 sm:p-6 flex items-center justify-center w-full overflow-hidden">
+                {product.name === 'Invoice Billing System' ? (
+                  <BillingSystemCarousel />
+                ) : (
+                  <img
+                    src={product.image}
+                    alt={`${product.name} screenshot placeholder`}
+                    className="w-full rounded-xl border border-border shadow-2xl"
+                  />
+                )}
               </div>
               <div className="p-8 lg:p-10 flex flex-col justify-center">
                 <span className="text-gold text-sm font-semibold uppercase tracking-wider">{product.category}</span>

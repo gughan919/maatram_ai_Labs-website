@@ -86,6 +86,11 @@ export default function Contact() {
                 <a href="tel:+919842296605" className="block text-white text-xl font-semibold mt-1 hover:text-gold">+91 98422 96605</a>
                 <a href="mailto:rethick854@gmail.com" className="block text-slate-400 mt-2 hover:text-gold">rethick854@gmail.com</a>
               </div>
+              <div className="rounded-xl border border-border p-5 hover:border-gold transition-all">
+                <span className="text-gold text-sm uppercase tracking-widest">D Gughan</span>
+                <a href="tel:+919629306611" className="block text-white text-xl font-semibold mt-1 hover:text-gold">+91 96293 06611</a>
+                <a href="mailto:gughan4912@gmail.com" className="block text-slate-400 mt-2 hover:text-gold">gughan4912@gmail.com</a>
+              </div>
             </div>
             <p className="text-slate-500 mt-6">
               We are available for product customization, custom software development, AI integrations, and long-term technology support.

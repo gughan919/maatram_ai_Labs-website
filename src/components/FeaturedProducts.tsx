@@ -20,7 +20,7 @@ export default function FeaturedProducts() {
             <AnimatedElement key={product.name}>
               <div className="bg-bg-card rounded-2xl border border-border overflow-hidden hover:border-gold transition-all h-full">
                 {product.name === 'Invoice Billing System' ? (
-                  <div className="w-full border-b border-border bg-black/20 px-2 flex items-center justify-center min-h-[300px]">
+                  <div className="w-full border-b border-border bg-black/20 flex items-center justify-center overflow-hidden">
                     <BillingSystemCarousel />
                   </div>
                 ) : (

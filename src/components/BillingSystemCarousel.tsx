@@ -19,37 +19,12 @@ const slides = [
 
 export default function BillingSystemCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleCards, setVisibleCards] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
-  // Calculate visible cards dynamically based on container/viewport width
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      if (width < 640) {
-        setVisibleCards(1);
-      } else if (width < 1280) {
-        setVisibleCards(2);
-      } else {
-        // Desktop has layout split (2 columns)
-        // If screen is very large, we can fit 3 cards in the left column.
-        setVisibleCards(width >= 1536 ? 3 : 2);
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const maxIndex = Math.max(0, slides.length - visibleCards);
-
-  // Cap index if resizing makes current index out of bounds
-  useEffect(() => {
-    setCurrentIndex((prev) => Math.min(prev, maxIndex));
-  }, [visibleCards, maxIndex]);
+  const visibleCards = 1; // Always display exactly one image at a time
+  const maxIndex = slides.length - 1;
 
   const handlePrev = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
@@ -61,12 +36,12 @@ export default function BillingSystemCarousel() {
 
   // Autoplay
   useEffect(() => {
-    if (isHovered || maxIndex === 0) return;
+    if (isHovered) return;
     const interval = setInterval(() => {
       handleNext();
     }, 3500);
     return () => clearInterval(interval);
-  }, [isHovered, maxIndex, handleNext]);
+  }, [isHovered, handleNext]);
 
   // Touch handlers for swipe support on mobile
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -80,7 +55,7 @@ export default function BillingSystemCarousel() {
   const handleTouchEnd = () => {
     if (!touchStartX.current || !touchEndX.current) return;
     const diff = touchStartX.current - touchEndX.current;
-    const threshold = 50; // minimum distance for swipe
+    const threshold = 50; // minimum swipe distance
 
     if (diff > threshold) {
       handleNext();
@@ -94,7 +69,7 @@ export default function BillingSystemCarousel() {
 
   return (
     <div 
-      className="relative w-full overflow-hidden group select-none py-4"
+      className="relative w-full overflow-hidden group select-none py-2"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={handleTouchStart}
@@ -102,16 +77,15 @@ export default function BillingSystemCarousel() {
       onTouchEnd={handleTouchEnd}
     >
       {/* Slider Track Wrapper */}
-      <div className="overflow-hidden w-full rounded-2xl">
+      <div className="overflow-hidden w-full rounded-xl">
         <div 
           className="flex transition-transform duration-500 ease-out"
-          style={{ transform: `translateX(-${currentIndex * (100 / visibleCards)}%)` }}
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {slides.map((slide) => (
             <div 
               key={slide.id} 
-              className="flex-shrink-0 px-2"
-              style={{ width: `${100 / visibleCards}%` }}
+              className="flex-shrink-0 w-full px-0"
             >
               <div className="bg-[#111111] rounded-xl border border-border/80 hover:border-gold/80 shadow-[0_0_15px_rgba(212,175,55,0.04)] hover:shadow-[0_0_25px_rgba(212,175,55,0.18)] transition-all duration-300 overflow-hidden flex flex-col h-full">
                 {/* Screenshot Area */}
@@ -137,40 +111,34 @@ export default function BillingSystemCarousel() {
       </div>
 
       {/* Navigation Arrows */}
-      {maxIndex > 0 && (
-        <>
-          <button 
-            onClick={handlePrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black/95 text-white hover:text-gold border border-border hover:border-gold/50 p-2.5 rounded-full transition-all opacity-0 group-hover:opacity-100 z-10 shadow-lg cursor-pointer"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <button 
-            onClick={handleNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black/95 text-white hover:text-gold border border-border hover:border-gold/50 p-2.5 rounded-full transition-all opacity-0 group-hover:opacity-100 z-10 shadow-lg cursor-pointer"
-            aria-label="Next slide"
-          >
-            <ChevronRight size={20} />
-          </button>
-        </>
-      )}
+      <button 
+        onClick={handlePrev}
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black/95 text-white hover:text-gold border border-border hover:border-gold/50 p-2.5 rounded-full transition-all opacity-0 group-hover:opacity-100 z-10 shadow-lg cursor-pointer"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft size={20} />
+      </button>
+      <button 
+        onClick={handleNext}
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-black/95 text-white hover:text-gold border border-border hover:border-gold/50 p-2.5 rounded-full transition-all opacity-0 group-hover:opacity-100 z-10 shadow-lg cursor-pointer"
+        aria-label="Next slide"
+      >
+        <ChevronRight size={20} />
+      </button>
 
       {/* Pagination Dots */}
-      {maxIndex > 0 && (
-        <div className="flex justify-center gap-2 mt-4">
-          {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                currentIndex === idx ? 'w-6 bg-gold' : 'w-2 bg-slate-600 hover:bg-slate-500'
-              }`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
-        </div>
-      )}
+      <div className="flex justify-center gap-2 mt-3">
+        {slides.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentIndex(idx)}
+            className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+              currentIndex === idx ? 'w-6 bg-gold' : 'w-2 bg-slate-600 hover:bg-slate-500'
+            }`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }

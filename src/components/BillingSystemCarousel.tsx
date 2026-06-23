@@ -89,11 +89,11 @@ export default function BillingSystemCarousel() {
             >
               <div className="bg-[#111111] rounded-xl border border-border/80 hover:border-gold/80 shadow-[0_0_15px_rgba(212,175,55,0.04)] hover:shadow-[0_0_25px_rgba(212,175,55,0.18)] transition-all duration-300 overflow-hidden flex flex-col h-full">
                 {/* Screenshot Area */}
-                <div className="relative aspect-[16/10] overflow-hidden bg-black/40 border-b border-border/40">
+                <div className="relative overflow-hidden bg-black/40 border-b border-border/40 w-full">
                   <img 
                     src={slide.image} 
                     alt={`${slide.title} view`} 
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    className="w-full h-auto block transition-transform duration-500 hover:scale-105"
                     loading="lazy"
                   />
                 </div>

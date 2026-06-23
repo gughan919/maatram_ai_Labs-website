@@ -2,6 +2,7 @@ import SectionReveal from './animations/SectionReveal';
 import StaggerContainer from './animations/StaggerContainer';
 import AnimatedElement from './animations/AnimatedElement';
 import { productCatalog } from '../data/products';
+import BillingSystemCarousel from './BillingSystemCarousel';
 
 export default function FeaturedProducts() {
   return (
@@ -18,7 +19,13 @@ export default function FeaturedProducts() {
           {productCatalog.map((product) => (
             <AnimatedElement key={product.name}>
               <div className="bg-bg-card rounded-2xl border border-border overflow-hidden hover:border-gold transition-all h-full">
-                <img src={product.image} alt={`${product.name} screenshot placeholder`} className="w-full aspect-[16/10] object-cover border-b border-border" />
+                {product.name === 'Invoice Billing System' ? (
+                  <div className="w-full border-b border-border bg-black/20 px-2 flex items-center justify-center min-h-[300px]">
+                    <BillingSystemCarousel />
+                  </div>
+                ) : (
+                  <img src={product.image} alt={`${product.name} screenshot placeholder`} className="w-full aspect-[16/10] object-cover border-b border-border" />
+                )}
                 <div className="p-8">
                   <span className="text-gold text-sm font-semibold uppercase tracking-wider">{product.category}</span>
                   <h3 className="font-heading text-2xl font-bold text-white mt-2 mb-4">{product.name}</h3>
